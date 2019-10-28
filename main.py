@@ -28,9 +28,11 @@ while Empire.is_active() and Rebels.is_active():
     attaсking_squad = attaсking_army.squads[attaсking_squad_id]
 
     attacked_squad = chosen_squad(attacked_army, strategy)
-
-    attaсking_squad.recharge(False)
-    attacked_squad.recharge(False)
+    
+    for i in attacked_army.active_squads():
+        attacked_army.squads[i].recharge(False)
+    for i in attaсking_army.active_squads():
+        attaсking_army.squads[i].recharge(False)
 
     if attaсking_squad.attack_success() >= attacked_squad.attack_success():
         damage_points = attaсking_squad.damage()

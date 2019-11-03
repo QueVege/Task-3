@@ -1,4 +1,4 @@
-import random
+from random import random, randint
 from statistics import geometric_mean
 from input_data import *
 
@@ -20,7 +20,7 @@ class Soldier():
 
     def attack_success(self):
 
-        return 0.5 * (1 + self.health / 100) * random.randint(50 + self.experience, 100) / 100
+        return 0.5 * (1 + self.health / 100) * randint(50 + self.experience, 100) / 100
 
     def damage(self):
 
@@ -34,7 +34,6 @@ class Soldier():
 
         self.experience = min(self.experience + 1, 50)
 
-#----------------------------------------
 class Operator(Soldier):
 
     def __init__(self, id, vehicle_id):
@@ -42,7 +41,6 @@ class Operator(Soldier):
         self.id = id
         self.vehicle_id = vehicle_id
 
-#----------------------------------------
 class Vehicle:
 
     health = 500
@@ -80,7 +78,7 @@ class Vehicle:
 
         self.health = max(self.health - 0.6 * points, 0)
 
-        loser = random.choice(self.operators)
+        loser = choice(self.operators)
 
         for op in self.operators:
             if op is loser:

@@ -1,83 +1,76 @@
-from random import random, randint
+from random import randint, choice
 from statistics import geometric_mean
 from input_data import *
 
-class Soldier():
 
-    health = 100
-    experience = 0
-    recharge = 0
-
-    def __init__(self, id, squad_id):
-
+class Unit:
+    def __init__(self, id, squad_id, hp):
         self.id = id
         self.squad_id = squad_id
+        self.health = hp
+        self.recharge = 0
+
+
+class Soldier(Unit):
+
+    def __init__(self, id, squad_id):
+        self.experience = 0
+        super().__init__(id, squad_id, 100)
 
     @property
     def is_active(self):
-
         return self.health > 0
 
+    @property
     def attack_success(self):
+        return 0.5 * (1 + self.health / 100) * \
+              randint(50 + self.experience, 100) / 100
 
-        return 0.5 * (1 + self.health / 100) * randint(50 + self.experience, 100) / 100
-
+    @property
     def damage(self):
-
         return 0.05 + self.experience / 100
 
     def get_damage(self, points):
-
         self.health = max(self.health - points, 0)
 
     def level_up(self):
-
         self.experience = min(self.experience + 1, 50)
+
 
 class Operator(Soldier):
 
-    def __init__(self, id, vehicle_id):
-
-        self.id = id
+    def __init__(self, id, vehicle_id, squad_id):
         self.vehicle_id = vehicle_id
+        super().__init__(id, squad_id)
 
-class Vehicle:
 
-    health = 500
-    recharge = 0
+class Vehicle(Unit):
 
     def __init__(self, id, squad_id):
-
-        self.id = id
-        self.squad_id = squad_id
-
-        self.operators = [Operator(i, self.id) for i in range(OPERATORS_COUNT)]
+        self.operators = [Operator(i, id, squad_id)
+                          for i in range(OPERATORS_COUNT)]
+        super().__init__(id, squad_id, 500)
 
     @property
     def is_active(self):
+        return len(self.operators) > 0 and self.health > 0
 
-        return any([op.is_active for op in self.operators]) and self.health > 0
-
+    @property
     def strength(self):
-
         return sum([op.health for op in self.operators])
 
+    @property
     def attack_success(self):
-
         op_success = [op.attack_success() for op in self.operators]
-
         return 0.5 * (1 + self.health / 100) * geometric_mean(op_success)
 
+    @property
     def damage(self):
-
         op_expirience = [op.experience for op in self.operators]
-
         return 0.1 + sum(op_expirience) / 100
 
     def get_damage(self, points):
-
         self.health = max(self.health - 0.6 * points, 0)
-
         loser = choice(self.operators)
 
         for op in self.operators:
@@ -89,6 +82,5 @@ class Vehicle:
         self.operators = [op for op in self.operators if op.is_active]
 
     def level_up(self):
-
         for op in self.operators:
             op.level_up()

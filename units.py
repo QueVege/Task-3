@@ -1,6 +1,6 @@
 from random import randint, choice
 from statistics import geometric_mean
-from input_data import *
+from config_data import SOLDIERS_HP, VEHICLES_HP, OPERATORS_COUNT
 
 
 class Unit:
@@ -15,7 +15,7 @@ class Soldier(Unit):
 
     def __init__(self, id, squad_id):
         self.experience = 0
-        super().__init__(id, squad_id, 100)
+        super().__init__(id, squad_id, SOLDIERS_HP)
 
     @property
     def is_active(self):
@@ -49,7 +49,7 @@ class Vehicle(Unit):
     def __init__(self, id, squad_id):
         self.operators = [Operator(i, id, squad_id)
                           for i in range(OPERATORS_COUNT)]
-        super().__init__(id, squad_id, 500)
+        super().__init__(id, squad_id, VEHICLES_HP)
 
     @property
     def is_active(self):
@@ -57,11 +57,11 @@ class Vehicle(Unit):
 
     @property
     def strength(self):
-        return sum([op.health for op in self.operators])
+        return sum([op.health for op in self.operators]) + self.health
 
     @property
     def attack_success(self):
-        op_success = [op.attack_success() for op in self.operators]
+        op_success = [op.attack_success for op in self.operators]
         return 0.5 * (1 + self.health / 100) * geometric_mean(op_success)
 
     @property

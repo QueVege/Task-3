@@ -1,0 +1,23 @@
+{
+    "consts": {
+        "SQUADS_COUNT": 2,
+        "SOLDIERS_COUNT": 5,
+        "VEHICLES_COUNT": 2,
+        "OPERATORS_COUNT": 3,
+        "SOLDIERS_HP": 100,
+        "VEHICLES_HP": 500
+    },
+    "seed": 123,
+    "armies": [
+        {
+            "id": "First",
+            "chosen_strategy": "random_squad"
+        },{
+            "id": "Second",
+            "chosen_strategy": "weakest_squad"
+        },{
+            "id": "Third",
+            "chosen_strategy": "strongest_squad"
+        }
+    ]
+}

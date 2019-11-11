@@ -1,6 +1,9 @@
-from random import randint, choice
+from threading import Timer
+from random import Random
 from statistics import geometric_mean
-from config_data import SOLDIERS_HP, VEHICLES_HP, OPERATORS_COUNT
+from config_data import seed, SOLDIERS_HP, VEHICLES_HP, OPERATORS_COUNT
+
+R = Random(seed)
 
 
 class Unit:
@@ -8,7 +11,15 @@ class Unit:
         self.id = id
         self.squad_id = squad_id
         self.health = hp
-        self.recharge = 0
+        self.recharge = False
+
+    def drop_recharge(self):
+        self.recharge = False
+
+    def set_recharge(self, recharge_time):
+        self.recharge = True
+        t = Timer(recharge_time, self.drop_recharge)
+        t.start()
 
 
 class Soldier(Unit):
@@ -24,7 +35,7 @@ class Soldier(Unit):
     @property
     def attack_success(self):
         return 0.5 * (1 + self.health / 100) * \
-              randint(50 + self.experience, 100) / 100
+              R.randint(50 + self.experience, 100) / 100
 
     @property
     def damage(self):
@@ -71,7 +82,7 @@ class Vehicle(Unit):
 
     def get_damage(self, points):
         self.health = max(self.health - 0.6 * points, 0)
-        loser = choice(self.operators)
+        loser = R.choice(self.operators)
 
         for op in self.operators:
             if op is loser:

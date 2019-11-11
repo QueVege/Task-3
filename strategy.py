@@ -1,5 +1,7 @@
-from random import Random, choice
+from random import Random
+from config_data import seed
 
+R = Random(seed)
 
 STRATEGIES = {}
 
@@ -13,7 +15,7 @@ def strategy(name):
 
 @strategy('random_squad')
 def random_squad(army):
-    return choice(army.squads)
+    return R.choice(army.squads)
 
 
 @strategy('weakest_squad')

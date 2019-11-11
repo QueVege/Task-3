@@ -72,21 +72,11 @@ class Squad:
             if not veh.recharge:
                 veh.level_up()
 
-    def recharge(self, flag):
-        if flag:
-            for sold in self.soldiers:
-                if not sold.recharge:
-                    sold.recharge += 2
+    def set_recharge(self):
+        for sold in self.soldiers:
+            if not sold.recharge:
+                sold.set_recharge(0)
 
-            for veh in self.vehicles:
-                if not veh.recharge:
-                    veh.recharge += 3
-
-        else:
-            for sold in self.soldiers:
-                if not sold.recharge:
-                    sold.recharge -= 1
-
-            for veh in self.vehicles:
-                if not veh.recharge:
-                    veh.recharge -= 1
+        for veh in self.vehicles:
+            if not veh.recharge:
+                veh.set_recharge(0.000001)

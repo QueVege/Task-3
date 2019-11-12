@@ -1,48 +1,27 @@
-import random
-from functions import chosen_squad
-from classes import *
+from battlefield import Battlefield
 
-Empire = Army(0)
-Rebels = Army(1)
 
-print("Please choose a strategy:\n\nRandom\t\t1\nWeakest\t\t2\nStrongest\t3\n")
-empire_strategy = int(input("Empire: "))
-rebels_strategy = int(input("Rebels: "))
+def main():
 
-battles = 0
+    try:
+        log_type = int(input(f"1 - Print the results to the console.\n"
+                             f"2 - Print the results to the file.\n"))
 
-while Empire.is_active() and Rebels.is_active():
+        if log_type == 1:
+            battle = Battlefield(log_type)
 
-    battles += 1
+        elif log_type == 2:
+            logfile = input("File for print: ")
+            battle = Battlefield(log_type, logfile)
 
-    attaсking_army = random.choice([Empire, Rebels])
+        else:
+            raise ValueError("Incorrect input")
 
-    if attaсking_army == Empire:
-        attacked_army = Rebels
-        strategy = empire_strategy
-    else:
-        attacked_army = Empire
-        strategy = rebels_strategy
+        battle.start()
 
-    attaсking_squad_id = random.choice(attaсking_army.active_squads())
-    attaсking_squad = attaсking_army.squads[attaсking_squad_id]
+    except ValueError:
+        print("Incorrect input")
 
-    attacked_squad = chosen_squad(attacked_army, strategy)
-    
-    for i in attacked_army.active_squads():
-        attacked_army.squads[i].recharge(False)
-    for i in attaсking_army.active_squads():
-        attaсking_army.squads[i].recharge(False)
 
-    if attaсking_squad.attack_success() >= attacked_squad.attack_success():
-        damage_points = attaсking_squad.damage()
-        attacked_squad.get_damage(damage_points)
-        attaсking_squad.level_up()
-        attaсking_squad.recharge(True)
-
-if Empire.is_active():
-    print("\n*** Empire wins! ***\n")
-else:
-    print("\n*** Rebels win! ***\n")
-
-print("It takes", battles, "battles")
+if __name__ == "__main__":
+    main()

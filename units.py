@@ -35,7 +35,7 @@ class Soldier(Unit):
     @property
     def attack_success(self):
         return 0.5 * (1 + self.health / 100) * \
-              R.randint(50 + self.experience, 100) / 100
+              R.randint(50 + self.experience, 101) / 100
 
     @property
     def damage(self):

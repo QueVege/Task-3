@@ -4,8 +4,8 @@
         "SOLDIERS_COUNT": 5,
         "VEHICLES_COUNT": 2,
         "OPERATORS_COUNT": 3,
-        "SOLDIERS_HP": 0.1,
-        "VEHICLES_HP": 0.4
+        "SOLDIERS_HP": 1,
+        "VEHICLES_HP": 3
     },
     "seed": 123,
     "armies": [

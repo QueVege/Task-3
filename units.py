@@ -33,6 +33,10 @@ class Soldier(Unit):
         return self.health > 0
 
     @property
+    def strength(self):
+        return self.health + self.experience * 0.02
+
+    @property
     def attack_success(self):
         return 0.5 * (1 + self.health / 100) * \
               R.randint(50 + self.experience, 101) / 100
@@ -68,7 +72,7 @@ class Vehicle(Unit):
 
     @property
     def strength(self):
-        return sum([op.health for op in self.operators]) + self.health
+        return sum([op.strength for op in self.operators]) + self.health
 
     @property
     def attack_success(self):

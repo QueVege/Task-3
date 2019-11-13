@@ -45,13 +45,11 @@ class Battlefield:
 
                 battle_report["Attacking"] = \
                     f"Squad #{att_sq.id} from army {att_army.id}. " \
-                    f"Contains {len(att_sq.soldiers)} soldiers" \
-                    f" and {len(att_sq.vehicles)} vehicles"
+                    f"Contains {len(att_sq.units)} units"
 
                 battle_report["Defending"] = \
                     f"Squad #{def_sq.id} from army {def_army.id}. " \
-                    f"Contains {len(def_sq.soldiers)} soldiers" \
-                    f" and {len(def_sq.vehicles)} vehicles"
+                    f"Contains {len(def_sq.units)} units"
 
                 def_sq.get_damage(dp)
                 battle_report["Outcome"] = \
@@ -61,11 +59,14 @@ class Battlefield:
 
                 att_sq.level_up()
 
+                before = len(self.armies)
                 self.armies = [army
                                for army in self.armies
                                if army.is_active]
-                battle_report["Losses"] = \
-                    f"Army {def_army.id} is not active anymore"
+                after = len(self.armies)
+                if (after - before):
+                    battle_report["Losses"] = \
+                        f"Army {def_army.id} is not active anymore"
 
                 self.report["battles"].append(battle_report)
 

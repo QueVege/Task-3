@@ -3,8 +3,6 @@ from random import Random
 from statistics import geometric_mean
 from config_data import seed, SOLDIERS_HP, VEHICLES_HP, OPERATORS_COUNT
 
-R = Random(seed)
-
 
 class Unit:
     def __init__(self, id, squad_id, hp):
@@ -12,6 +10,7 @@ class Unit:
         self.squad_id = squad_id
         self.health = hp
         self.recharge = False
+        self.R = Random(seed)
 
     def drop_recharge(self):
         self.recharge = False
@@ -34,19 +33,22 @@ class Soldier(Unit):
 
     @property
     def strength(self):
-        return self.health + self.experience * 0.02
+        st = self.health + self.experience * 0.02
+        return round(st, 2)
 
     @property
     def attack_success(self):
-        return 0.5 * (1 + self.health / 100) * \
-              R.randint(50 + self.experience, 101) / 100
+        att_suc = 0.5 * (1 + self.health / 100) * \
+              self.R.randint(50 + self.experience, 101) / 100
+        return round(att_suc, 2)
 
     @property
     def damage(self):
         return 0.05 + self.experience / 100
 
     def get_damage(self, points):
-        self.health = max(self.health - points, 0)
+        hp = max(self.health - points, 0)
+        self.health = round(hp, 2)
 
     def level_up(self):
         self.experience = min(self.experience + 1, 50)
@@ -77,7 +79,8 @@ class Vehicle(Unit):
     @property
     def attack_success(self):
         op_success = [op.attack_success for op in self.operators]
-        return 0.5 * (1 + self.health / 100) * geometric_mean(op_success)
+        att_suc = 0.5 * (1 + self.health / 100) * geometric_mean(op_success)
+        return round(att_suc, 2)
 
     @property
     def damage(self):
@@ -85,8 +88,9 @@ class Vehicle(Unit):
         return 0.1 + sum(op_expirience) / 100
 
     def get_damage(self, points):
-        self.health = max(self.health - 0.6 * points, 0)
-        loser = R.choice(self.operators)
+        veh_hp = max(self.health - 0.6 * points, 0)
+        self.health = round(veh_hp, 2)
+        loser = self.R.choice(self.operators)
 
         for op in self.operators:
             if op is loser:

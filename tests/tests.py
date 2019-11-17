@@ -1,7 +1,37 @@
 import unittest
-from units import Soldier, Vehicle
+from mock import patch
 from random import Random
+from strategy import choose_squad
 from config_data import seed
+from units import Soldier, Vehicle
+from squad import Squad
+import army
+
+
+class TestStrategy(unittest.TestCase):
+
+    def setUp(self):
+        self.army = army.Army(0, "random_squad")
+        self.army.squads[0].get_damage(0.6)
+        self.army.squads[1].get_damage(0.9)
+
+    def test_weakest_squad(self):
+        sq = choose_squad("weakest_squad", self.army)
+        self.assertIs(sq, self.army.squads[1])
+
+    def test_strongest_squad(self):
+        sq = choose_squad("strongest_squad", self.army)
+        self.assertIs(sq, self.army.squads[0])
+
+
+class TestClassArmy(unittest.TestCase):
+
+    @patch("army.SQUADS_COUNT", 4)
+    def test_init_army(self):
+        self.army = army.Army(0, "random_squad")
+        self.assertEqual(len(self.army.squads), 4)
+        for sq in self.army.squads:
+            self.assertIsInstance(sq, Squad)
 
 
 class TestClassSoldier(unittest.TestCase):
